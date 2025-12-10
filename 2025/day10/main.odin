@@ -165,11 +165,16 @@ solve_light_puzzle :: proc(lights: []bool, buttons: [][]int) -> int {
 	if all_off do return 0
 	
 	min_presses := n_buttons + 1
+
+	current_state := make([]bool, n_lights)
+	defer delete(current_state)
 	
 	// Try all possible button combinations (2^n_buttons possibilities)
 	for mask: u64 = 0; mask < (1 << u64(n_buttons)); mask += 1 {
 		presses := 0
-		current_state := make([]bool, n_lights)
+		
+		// Reset current state to all off
+		for i in 0..<n_lights { current_state[i] = false }
 		
 		// Apply selected buttons
 		for btn_idx in 0..<n_buttons {
